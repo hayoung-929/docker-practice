@@ -1,16 +1,11 @@
-FROM eclipse-temurin:21-jdk AS build
+FROM gradle:9.5.1-jdk21 AS build
 
 WORKDIR /app
 
-COPY gradlew .
-COPY gradle gradle
-COPY build.gradle settings.gradle ./
+COPY --chown=gradle:gradle build.gradle settings.gradle ./
+COPY --chown=gradle:gradle src src
 
-RUN chmod +x gradlew
-
-COPY src src
-
-RUN ./gradlew clean bootJar --no-daemon
+RUN gradle clean bootJar --no-daemon
 
 
 FROM eclipse-temurin:21-jre
